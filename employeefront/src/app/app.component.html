@@ -1,0 +1,205 @@
+<nav class="navbar navbar-expand-lg bg-dark">
+  <a class="navbar-brand" style="color: wheat;">Foydalanuvchilar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a  (click)="addOpenModal()" class="btn nav-link" style="color: white;" >Foydalanuvchi qo'shish</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" id="main-container">
+    <div class="row">
+        <div *ngFor="let employee of employees" class="col-md-6 col-xl-4">
+            <div class="card m-b-30">
+                <div class="card-body row">
+                    <div class="col-6">
+                        <a href=""><img src="{{employee?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
+                    </div>
+                    <div class="col-8 card-title align-self-center mb-0">
+                        <h5>{{employee?.firstName}}</h5>
+                        <h6>{{employee?.lastName}}</h6>
+                        <h6>{{employee?.jobTitle}}</h6>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{employee?.email}}</li>
+                    <li class="list-group-item"><i class="fa fa-phone float-right"></i>{{employee?.lastName}}</li>
+                    <li class="list-group-item"><i class="fa fa-card float-right"></i><span>Card Nummber: </span>{{employee?.cardNumber}}</li>
+                    <li class="list-group-item"><i class="fa fa-card float-right" ></i><span>Passport Nummber: </span>{{employee?.passport}}</li>
+                    <li class="list-group-item"><i class="fa fa-card float-right"></i><span>Birth Date: </span>{{employee?.birthDate}}</li>
+
+                </ul>
+                <div class="card-body">
+                    <div class="float-right btn-group btn-group-sm">
+                        <a (click)="onOpenModal(employee,'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a (click)="onOpenModal(employee,'delete')"  class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Add new User-->
+<div class="modal fade" id="addEmployeeModal"  tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addEmployeeModalLabel">Yangi Foydalanuvchi qushish</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hiden="true">&times;</span>
+         </button>
+      </div>
+     <div class="modal-body">
+      <form #addForm="ngForm" (ngSubmit)="onAddEmployee(addForm)">
+        <div class="form-group">
+          <label for="name">Ism: </label>
+          <input type="text"  ngModel name="firstName"
+          class="form-control" id="firstName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Familya:</label>
+          <input type="text" ngModel name="lastName" class="form-control" id="lastName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="text"ngModel  name="email" class="form-control" id="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="imageUrl">Rasmni yuklash: </label>
+          <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl">
+        </div>
+
+        
+
+        <div class="form-group">
+          <label for="jobTitle">Kasbi: </label>
+          <input type="text" ngModel name="jobTitle" class="form-control" id="jobTitle">
+        </div>
+
+        <div class="form-group">
+          <label for="birthDate">To'g'ilgan kun:</label>
+          <input type="date" ngModel name="birthDate" class="form-control" id="birthDate">
+        </div>
+
+        <div class="form-group">
+          <label for="passport">Passport</label>
+          <input type="text"  ngModel name="passport" class="form-control" id="passport">
+        </div>
+
+        <div class="form-group">
+          <label for="cardNumber">Karta Nomeri: </label>
+          <input type="text" matInput mask="(0000) - (0000)-(0000)" prefix="+7" placeholder="Ex. (000) 000-0000" ngModel name="cardNumber" class="form-control" id="cardNumber">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">Yopish</button>
+          <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Yangi Foydalanuvchini Saqlash</button>
+        </div>
+      </form>
+     </div>
+    </div>
+  </div>
+</div>
+
+<!--Edit User-->
+
+<div class="modal fade" id="updateEmployeeModal"  tabindex="-1" role="dialog" aria-labelledby="updateEmployeeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateEmployeeModalLabel">Foydalanuvchini qayta yuklash</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hiden="true">&times;</span>
+         </button>
+      </div>
+     <div class="modal-body">
+      <form #editForm="ngForm" >
+        <div class="form-group">
+          <label for="id">Id:</label>
+          <input type="text"  ngModel="{{editEmployee?.id}}" name="id"
+          class="form-control" id="id"  readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Ism:</label>
+          <input type="text"  ngModel="{{editEmployee?.firstName}}" name="firstName"
+          class="form-control" id="firstName" placeholder="FirstName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Familya:</label>
+          <input type="text" ngModel="{{editEmployee?.lastName}}" name="lastName" class="form-control" id="lastName">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="text" ngModel="{{editEmployee?.email}}" name="email" class="form-control" id="email">
+        </div>
+
+        <div class="form-group">
+          <label for="imageUrl">Rasm :</label>
+          <input type="text" ngModel="{{editEmployee?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl">
+        </div>
+
+        <div class="form-group">
+          <label for="jobTitle">Kasbi :</label>
+          <input type="text" ngModel="{{editEmployee?.jobTitle}}" name="jobTitle" class="form-control" id="jobTitle">
+        </div>
+
+        <div class="form-group">
+          <label for="birthDate">To'g'ilgan kun</label>
+          <input type="text" ngModel="{{editEmployee?.birthDate}}" name="birthDate" class="form-control" id="birthDate">
+        </div>
+
+        <div class="form-group">
+          <label for="cardNumber">Karta Nomeri</label>
+          <input type="text" ngModel="{{editEmployee?.cardNumber}}" matInput mask="(0000) - (0000)-(0000)" placeholder="Ex. (000) 000-0000" name="cardNumber" class="form-control" id="cardNumber">
+        </div>
+
+        <div class="form-group">
+          <label for="passport">Pasport Nomeri</label>
+          <input type="text" ngModel="{{editEmployee?.passport}}" name="passport" class="form-control" id="passport">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
+          <button (click) = "onUpdateEmployee(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Uzgarishlarni Saqlash</button>
+        </div>
+      </form>
+     </div>
+    </div>
+  </div>
+</div>
+
+<!-- delete user-->
+
+<div class="modal fade" id="deleteModal"  tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Foydalanuvchini uchirish</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hiden="true">&times;</span>
+         </button>
+      </div>
+     <div class="modal-body">
+       <form #deleteForm="ngForm">
+      <p> Foydalanuvchini uchirmoqchimisiz? {{deleteEmployee?.firstName}}</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Yo'q</button>
+          <button (click)="onDeleteEmployee(deleteForm.value)" class="btn btn-danger" data-dismiss="modal">Ha</button>
+        </div>
+      </form>
+     </div>
+    </div>
+  </div>
+</div>
+</div>
